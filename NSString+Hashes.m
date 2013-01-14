@@ -3,6 +3,7 @@
 //  LIFTUPP
 //
 //  Created by Klaus-Peter Dudas on 26/07/2011.
+//  Modified by hd@onlinecity.dk to not use NSMutableString which is (kinda) slow.
 //  Copyright: Do whatever you want with this, i.e. Public Domain
 //
 
@@ -19,14 +20,22 @@
 
     CC_MD5(data.bytes, data.length, digest);
     
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    // Convert to hex (high performance)
+    static const char HexEncodeChars[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    char *resultData;
+    resultData = malloc(CC_MD5_DIGEST_LENGTH*2+1);
     
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
-    {
-        [output appendFormat:@"%02x", digest[i]];
+    for (uint i=0;i<CC_MD5_DIGEST_LENGTH;i++) {
+        resultData[i*2]=HexEncodeChars[(digest[i] >> 4)];
+        resultData[i*2+1]=HexEncodeChars[(digest[i] % 0x10)];
     }
+    resultData[CC_MD5_DIGEST_LENGTH*2] = 0;
     
-    return output;
+    // Return as a NSString without copying the bytes
+    return [[NSString alloc] initWithBytesNoCopy:resultData
+                                          length:CC_MD5_DIGEST_LENGTH*2
+                                        encoding:NSASCIIStringEncoding
+                                    freeWhenDone:YES];
 }
 
 - (NSString *)sha1
@@ -36,14 +45,22 @@
     
     CC_SHA1(data.bytes, data.length, digest);
     
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    // Convert to hex (high performance)
+    static const char HexEncodeChars[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    char *resultData;
+    resultData = malloc(CC_SHA1_DIGEST_LENGTH*2+1);
     
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-    {
-        [output appendFormat:@"%02x", digest[i]];
+    for (uint i=0;i<CC_SHA1_DIGEST_LENGTH;i++) {
+        resultData[i*2]=HexEncodeChars[(digest[i] >> 4)];
+        resultData[i*2+1]=HexEncodeChars[(digest[i] % 0x10)];
     }
+    resultData[CC_SHA1_DIGEST_LENGTH*2] = 0;
     
-    return output;
+    // Return as a NSString without copying the bytes
+    return [[NSString alloc] initWithBytesNoCopy:resultData
+                                          length:CC_SHA1_DIGEST_LENGTH*2
+                                        encoding:NSASCIIStringEncoding
+                                    freeWhenDone:YES];
 }
 
 - (NSString *)sha256
@@ -53,14 +70,22 @@
     
     CC_SHA256(data.bytes, data.length, digest);
     
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+    // Convert to hex (high performance)
+    static const char HexEncodeChars[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    char *resultData;
+    resultData = malloc(CC_SHA256_DIGEST_LENGTH*2+1);
     
-    for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
-    {
-        [output appendFormat:@"%02x", digest[i]];
+    for (uint i=0;i<CC_SHA256_DIGEST_LENGTH;i++) {
+        resultData[i*2]=HexEncodeChars[(digest[i] >> 4)];
+        resultData[i*2+1]=HexEncodeChars[(digest[i] % 0x10)];
     }
+    resultData[CC_SHA256_DIGEST_LENGTH*2] = 0;
     
-    return output;
+    // Return as a NSString without copying the bytes
+    return [[NSString alloc] initWithBytesNoCopy:resultData
+                                          length:CC_SHA256_DIGEST_LENGTH*2
+                                        encoding:NSASCIIStringEncoding
+                                    freeWhenDone:YES];
 }
 
 - (NSString *)sha512
@@ -70,14 +95,22 @@
     
     CC_SHA512(data.bytes, data.length, digest);
     
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA512_DIGEST_LENGTH * 2];
+    // Convert to hex (high performance)
+    static const char HexEncodeChars[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+    char *resultData;
+    resultData = malloc(CC_SHA512_DIGEST_LENGTH*2+1);
     
-    for (int i = 0; i < CC_SHA512_DIGEST_LENGTH; i++)
-    {
-        [output appendFormat:@"%02x", digest[i]];
+    for (uint i=0;i<CC_SHA512_DIGEST_LENGTH;i++) {
+        resultData[i*2]=HexEncodeChars[(digest[i] >> 4)];
+        resultData[i*2+1]=HexEncodeChars[(digest[i] % 0x10)];
     }
+    resultData[CC_SHA512_DIGEST_LENGTH*2] = 0;
     
-    return output;
+    // Return as a NSString without copying the bytes
+    return [[NSString alloc] initWithBytesNoCopy:resultData
+                                          length:CC_SHA512_DIGEST_LENGTH*2
+                                        encoding:NSASCIIStringEncoding
+                                    freeWhenDone:YES];
 }
 
 @end
